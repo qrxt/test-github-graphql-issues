@@ -1,0 +1,99 @@
+{
+  "name": "test-work-gpb-cos-2",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "server": "nodemon --exec node --experimental-specifier-resolution=node --loader ts-node/esm ./src/mocks/server.ts",
+    "preview": "vite preview",
+    "test": "jest",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "lint-staged": {
+    "*.(js|jsx|ts|tsx)": [
+      "npm run lint:write",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "overrides": {
+    "react-virtualized-auto-sizer": {
+      "react": "^18.0.0",
+      "react-dom": "^18.0.0"
+    }
+  },
+  "dependencies": {
+    "@apollo/client": "^3.7.2",
+    "@chakra-ui/icons": "^2.0.10",
+    "@chakra-ui/react": "^2.3.4",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@types/react-helmet": "^6.1.5",
+    "apexcharts": "^3.36.0",
+    "axios": "^0.27.2",
+    "downshift": "^7.0.5",
+    "framer-motion": "^7.5.1",
+    "graphql": "^16.6.0",
+    "i18next": "^22.0.4",
+    "i18next-browser-languagedetector": "^7.0.1",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-helmet": "^6.1.0",
+    "react-hook-form": "^7.39.1",
+    "react-i18next": "^12.0.0",
+    "react-icons": "^4.6.0",
+    "react-router": "^6.3.0",
+    "react-router-dom": "^6.3.0",
+    "react-virtualized-auto-sizer": "^1.0.7"
+  },
+  "devDependencies": {
+    "@emotion/babel-plugin": "^11.10.2",
+    "@emotion/babel-preset-css-prop": "^11.10.0",
+    "@emotion/eslint-plugin": "^11.10.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/express": "^4.17.14",
+    "@types/jest": "^28.1.1",
+    "@types/lodash": "^4.14.185",
+    "@types/node": "^18.11.3",
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "@types/react-virtualized-auto-sizer": "^1.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
+    "@vitejs/plugin-react": "^2.1.0",
+    "eslint": "^8.23.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.7",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "express": "^4.18.2",
+    "husky": "^8.0.1",
+    "jest": "^28.1.3",
+    "jest-environment-jsdom": "^29.0.2",
+    "msw": "^0.47.4",
+    "nodemon": "^2.0.20",
+    "path": "^0.12.7",
+    "prettier": "2.7.1",
+    "pretty-quick": "^3.1.3",
+    "react-select-event": "^5.5.1",
+    "rollup-plugin-analyzer": "^4.0.0",
+    "ts-jest": "^28.0.8",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.0",
+    "tsconfig-paths-jest": "^0.0.1",
+    "typescript": "^4.6.4",
+    "url": "^0.11.0",
+    "vite": "^3.1.0"
+  }
+}
