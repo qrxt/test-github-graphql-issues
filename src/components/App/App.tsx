@@ -4,14 +4,11 @@ import Page from "components/Page";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 
-// const ExchangeRates = React.lazy(
-//   () => import("components/pages/ExchangeRatesPage")
-// );
+const Issues = React.lazy(() => import("components/pages/IssuesPage"));
 
 function App() {
   const { t } = useTranslation();
 
-  console.log("hello");
   return (
     <Page>
       <Helmet>
@@ -21,10 +18,9 @@ function App() {
         <Route
           path="/"
           element={
-            // <Suspense fallback={<ExchangeRatesSkeleton />}>
-            //   <ExchangeRates />
-            // </Suspense>
-            <div>hello</div>
+            <Suspense fallback={<div>loading...</div>}>
+              <Issues />
+            </Suspense>
           }
         />
       </Routes>

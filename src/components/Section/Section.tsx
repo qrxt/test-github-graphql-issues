@@ -9,7 +9,7 @@ function Section(props: BoxProps) {
   return (
     <Box
       py={3}
-      px={[3, 3, 6, 6]}
+      px={[3, 3, 6]}
       borderRadius="xl"
       boxShadow="md"
       bg={controlsBg}

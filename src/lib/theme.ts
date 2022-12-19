@@ -5,9 +5,16 @@ const config = {
   useSystemColorMode: false,
 };
 
+const breakpoints = {
+  sm: "30em",
+  md: "48em",
+  lg: "62em",
+};
+
 const theme = extendTheme(
   {
     config,
+    breakpoints,
     styles: {
       global: {
         "html, body, #root": {
