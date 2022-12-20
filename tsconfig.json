@@ -33,7 +33,9 @@
       "__tests__": ["./__tests__"],
       "__tests__/*": ["./__tests__/*"],
       "lib": ["./src/lib"],
-      "lib/*": ["./src/lib/*"]
+      "lib/*": ["./src/lib/*"],
+      "apollo": ["./src/apollo"],
+      "apollo/*": ["./src/apollo/*"]
     }
   },
   "ts-node": {

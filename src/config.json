@@ -1,6 +1,6 @@
 {
   "network": {
-    "requestUrlBase": "http://localhost:3000",
+    "requestUrlBase": "https://api.github.com/graphql",
     "testRequestUrlBase": "http://localhost:3000",
     "endpoints": {
     }

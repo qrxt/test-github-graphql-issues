@@ -32,6 +32,7 @@ export default ({ mode }) => {
         messages: path.resolve(__dirname, "./src/messages"),
         lib: path.resolve(__dirname, "./src/lib"),
         __tests__: path.resolve(__dirname, "./__tests__"),
+        apollo: path.resolve(__dirname, "./src/apollo"),
       },
     },
     plugins: [

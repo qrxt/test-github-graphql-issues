@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useCombobox } from "downshift";
 import { Flex, Input, List, ListItem, Stack, Text } from "@chakra-ui/react";
 import { css } from "@emotion/react";
+import { UseFormRegisterReturn } from "react-hook-form";
 
 interface SelectOption {
   value: string;
@@ -72,10 +73,17 @@ interface ComboboxProps {
   selectedItem?: SelectOption | null;
   label?: string;
   items: ComboOption[];
+  inputProps?: UseFormRegisterReturn;
+  onSelectedItemChange?: () => void;
 }
 
 function Combobox(props: ComboboxProps) {
-  const { label, items: initialItems } = props;
+  const {
+    label,
+    items: initialItems,
+    inputProps,
+    onSelectedItemChange = () => null,
+  } = props;
   const [items, setItems] = useState<ComboOption[]>(initialItems);
   const {
     isOpen,
@@ -87,6 +95,9 @@ function Combobox(props: ComboboxProps) {
   } = useCombobox({
     items: items,
     itemToString: (item) => item?.label || "",
+    onSelectedItemChange: () => {
+      onSelectedItemChange();
+    },
     onInputValueChange: ({ inputValue }) => {
       if (!inputValue) {
         setItems(initialItems);
@@ -115,7 +126,7 @@ function Combobox(props: ComboboxProps) {
       <Stack position="relative">
         <Flex alignItems="center">
           <ComboboxInput
-            {...getInputProps()}
+            {...getInputProps(inputProps)}
             placeholder="facebook/react"
             flex="0 0 auto"
           />
@@ -129,6 +140,7 @@ function Combobox(props: ComboboxProps) {
           mt={0}
           css={comboboxListStyles}
           bg="white"
+          border="1px solid blackAlpha.300"
         >
           {items.map((item, index) => (
             <ComboboxItem

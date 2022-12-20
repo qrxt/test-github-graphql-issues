@@ -1,8 +1,9 @@
+import React, { useState } from "react";
 import { Box, Button, Flex, Stack } from "@chakra-ui/react";
 import Combobox from "components/Combobox/Combobox";
-import React from "react";
+import { FieldValues, useForm, useFormState } from "react-hook-form";
 
-const testItems = [
+const initialItems = [
   {
     value: "rails/rails",
     label: "rails/rails",
@@ -14,14 +15,36 @@ const testItems = [
 ];
 
 function IssuesForm() {
+  const { register, handleSubmit, control } = useForm<FieldValues>({
+    defaultValues: {
+      repo: "",
+    },
+  });
+  const { isDirty } = useFormState<FieldValues>({
+    control,
+  });
+  const [isRepoSelected, setIsRepoSelected] = useState(false);
+
   return (
     <Stack>
-      <form>
+      <form onSubmit={handleSubmit((data) => console.log(data))}>
         <Flex w={["100%", "100%", "65%"]}>
           <Box flexGrow={1} pr={3}>
-            <Combobox label="Repo" items={testItems} />
+            <Combobox
+              label="Repo"
+              items={initialItems}
+              inputProps={register("repo")}
+              onSelectedItemChange={() => {
+                setIsRepoSelected(true);
+              }}
+            />
           </Box>
-          <Button alignSelf="flex-end" ml="auto">
+          <Button
+            alignSelf="flex-end"
+            ml="auto"
+            type="submit"
+            disabled={!(isDirty || isRepoSelected)}
+          >
             Submit
           </Button>
         </Flex>
@@ -31,3 +54,7 @@ function IssuesForm() {
 }
 
 export default IssuesForm;
+
+// TODO: test that option selection is working
+// TODO: test that submit button is disabled by default
+// TODO: test that form is dirty after option select
