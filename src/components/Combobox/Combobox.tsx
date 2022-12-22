@@ -1,21 +1,27 @@
 import React, { useState } from "react";
 import { useCombobox } from "downshift";
-import { Flex, Input, List, ListItem, Stack, Text } from "@chakra-ui/react";
+import {
+  Flex,
+  Input,
+  List,
+  ListItem,
+  Popover,
+  Portal,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { css } from "@emotion/react";
-import { UseFormRegisterReturn } from "react-hook-form";
+import {
+  RefCallBack,
+  SubmitHandler,
+  UseFormRegisterReturn,
+} from "react-hook-form";
+import { size } from "lodash";
 
 interface SelectOption {
   value: string;
   label: string;
 }
-
-type InputRef = HTMLInputElement;
-
-const ComboboxInput = React.forwardRef<InputRef>(({ ...props }, ref) => {
-  return <Input {...props} ref={ref} />;
-});
-ComboboxInput.displayName = "ComboboxInput";
-
 interface ComboboxListProps {
   isOpen: boolean;
 }
@@ -62,6 +68,7 @@ const comboboxListStyles = css`
   position: absolute;
   top: 100%;
   width: 100%;
+  z-index: 1;
 `;
 
 type ComboOption = {
@@ -69,24 +76,27 @@ type ComboOption = {
   label: string;
 };
 
+interface ComboboxInputProps {
+  ref: RefCallBack;
+  onChange: () => void;
+}
+
 interface ComboboxProps {
   selectedItem?: SelectOption | null;
   label?: string;
   items: ComboOption[];
-  inputProps?: UseFormRegisterReturn;
-  onSelectedItemChange?: () => void;
+  inputProps?: ComboboxInputProps;
+  onChange: (val?: string) => void;
+  submit: (
+    e?: React.BaseSyntheticEvent<object, any, any> | undefined
+  ) => Promise<void>;
 }
 
 function Combobox(props: ComboboxProps) {
-  const {
-    label,
-    items: initialItems,
-    inputProps,
-    onSelectedItemChange = () => null,
-  } = props;
+  const { label, items: initialItems, inputProps, onChange, submit } = props;
   const [items, setItems] = useState<ComboOption[]>(initialItems);
   const {
-    isOpen,
+    isOpen: _isOpen,
     getLabelProps,
     getMenuProps,
     getInputProps,
@@ -95,8 +105,8 @@ function Combobox(props: ComboboxProps) {
   } = useCombobox({
     items: items,
     itemToString: (item) => item?.label || "",
-    onSelectedItemChange: () => {
-      onSelectedItemChange();
+    onSelectedItemChange: ({ inputValue }) => {
+      onChange(inputValue);
     },
     onInputValueChange: ({ inputValue }) => {
       if (!inputValue) {
@@ -112,6 +122,7 @@ function Combobox(props: ComboboxProps) {
     },
   });
 
+  const isOpen = _isOpen && size(items);
   return (
     <Stack>
       <Text
@@ -125,13 +136,19 @@ function Combobox(props: ComboboxProps) {
       </Text>
       <Stack position="relative">
         <Flex alignItems="center">
-          <ComboboxInput
-            {...getInputProps(inputProps)}
+          <Input
             placeholder="facebook/react"
             flex="0 0 auto"
+            {...getInputProps({
+              ...inputProps,
+              onKeyDown: (e) => {
+                if (e.key === "Enter" && !size(items)) {
+                  submit();
+                }
+              },
+            })}
           />
         </Flex>
-
         <ComboboxList
           isOpen={isOpen}
           {...getMenuProps()}
@@ -140,18 +157,21 @@ function Combobox(props: ComboboxProps) {
           mt={0}
           css={comboboxListStyles}
           bg="white"
-          border="1px solid blackAlpha.300"
+          border="1px"
+          borderColor="blackAlpha.300"
         >
-          {items.map((item, index) => (
-            <ComboboxItem
-              {...getItemProps({ item, index })}
-              itemIndex={index}
-              highlightedIndex={highlightedIndex}
-              key={item.value}
-            >
-              {item.label}
-            </ComboboxItem>
-          ))}
+          <Popover>
+            {items.map((item, index) => (
+              <ComboboxItem
+                {...getItemProps({ item, index })}
+                itemIndex={index}
+                highlightedIndex={highlightedIndex}
+                key={item.value}
+              >
+                {item.label}
+              </ComboboxItem>
+            ))}
+          </Popover>
         </ComboboxList>
       </Stack>
     </Stack>

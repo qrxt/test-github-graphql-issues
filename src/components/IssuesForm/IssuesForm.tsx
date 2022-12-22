@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Box, Button, Flex, List, ListItem, Stack } from "@chakra-ui/react";
+import React from "react";
+import { Box, Button, Flex, Stack } from "@chakra-ui/react";
 import Combobox from "components/Combobox/Combobox";
-import { FieldValues, useForm, useFormState } from "react-hook-form";
+import { Controller, useForm, useFormState } from "react-hook-form";
 import { useLazyQuery } from "@apollo/client";
 import Issues from "components/Issues/Issues";
 import { GET_LAST_ISSUES } from "apollo/issues";
@@ -25,9 +25,8 @@ type FormValues = {
 function IssuesForm() {
   const [getIssues, { loading, data, error }] = useLazyQuery(GET_LAST_ISSUES);
   const issues = get(data, "repositoryOwner.repository.issues.edges");
-  console.log("$$", data, error);
 
-  const { register, handleSubmit, control } = useForm<FormValues>({
+  const { handleSubmit, control } = useForm<FormValues>({
     defaultValues: {
       repo: "",
     },
@@ -35,7 +34,6 @@ function IssuesForm() {
   const { isDirty } = useFormState<FormValues>({
     control,
   });
-  const [isRepoSelected, setIsRepoSelected] = useState(false);
 
   function formSubmitHandler(data: FormValues) {
     const { repo } = data;
@@ -46,26 +44,32 @@ function IssuesForm() {
     });
   }
 
+  const submitHandler = handleSubmit(formSubmitHandler);
   return (
     <Stack>
       <Box mb={6}>
-        <form onSubmit={handleSubmit(formSubmitHandler)}>
+        <form onSubmit={submitHandler}>
           <Flex w={["100%", "100%", "65%"]}>
             <Box flexGrow={1} pr={3}>
-              <Combobox
-                label="Repo"
-                items={initialItems}
-                inputProps={register("repo")}
-                onSelectedItemChange={() => {
-                  setIsRepoSelected(true);
-                }}
+              <Controller
+                control={control}
+                name="repo"
+                render={({ field: { onChange, ref } }) => (
+                  <Combobox
+                    label="Repo"
+                    items={initialItems}
+                    inputProps={{ onChange, ref }}
+                    onChange={onChange}
+                    submit={submitHandler}
+                  />
+                )}
               />
             </Box>
             <Button
               alignSelf="flex-end"
               ml="auto"
               type="submit"
-              disabled={!(isDirty || isRepoSelected)}
+              disabled={!isDirty}
             >
               Submit
             </Button>
