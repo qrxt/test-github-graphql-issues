@@ -8,10 +8,13 @@ export const GET_LAST_ISSUES = gql`
           edges {
             node {
               title
+              url
+              body
               author {
                 login
+                avatarUrl
+                url
               }
-              url
             }
           }
         }

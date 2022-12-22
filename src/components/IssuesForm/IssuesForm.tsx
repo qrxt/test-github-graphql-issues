@@ -22,6 +22,7 @@ type FormValues = {
   repo: string;
 };
 
+// TODO: set static size
 function IssuesForm() {
   const [getIssues, { loading, data, error }] = useLazyQuery(GET_LAST_ISSUES);
   const issues = get(data, "repositoryOwner.repository.issues.edges");
@@ -71,7 +72,7 @@ function IssuesForm() {
               type="submit"
               disabled={!isDirty}
             >
-              Submit
+              Search
             </Button>
           </Flex>
         </form>
