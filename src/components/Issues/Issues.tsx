@@ -32,6 +32,7 @@ const issueBodyStyles = css`
   }
 `;
 
+// TODO: move to module
 function ShadowGradient() {
   const shadowGradientStyles = css`
     position: absolute;
@@ -43,7 +44,7 @@ function ShadowGradient() {
     background: linear-gradient(
       to bottom,
       rgba(255, 255, 255, 0) 0%,
-      rgba(40, 40, 40, 0) 50%,
+      rgba(120, 120, 120, 0) 50%,
       rgba(255, 255, 255, 1) 100%
     );
 
@@ -83,7 +84,12 @@ function IssueItem({ issue }) {
             </ReactMarkdown>
             {size(body) > size(truncatedBody) ? <ShadowGradient /> : null}
           </Box>
-          <Flex justifyContent="space-between" alignItems="flex-end" w="100%">
+          <Flex
+            justifyContent="space-between"
+            alignItems="flex-end"
+            w="100%"
+            flexWrap="wrap"
+          >
             <Link href={link} color="blue.300">
               Open on GitHub
             </Link>

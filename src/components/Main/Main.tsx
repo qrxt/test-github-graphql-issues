@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, useColorModeValue } from "@chakra-ui/react";
+import { Box, Container, Heading, Stack } from "@chakra-ui/react";
 import { css } from "@emotion/react";
 
 function Main({ children }: { children: React.ReactNode }) {
@@ -9,8 +9,17 @@ function Main({ children }: { children: React.ReactNode }) {
   `;
 
   return (
-    <Box as="main" css={mainStyles} p={6} h={"80%"}>
-      {children}
+    <Box as="main" css={mainStyles} p={[12, 20, 20]}>
+      <Stack
+        spacing={4}
+        as={Container}
+        maxW={"3xl"}
+        textAlign={"center"}
+        px={0}
+      >
+        <Heading fontSize={"2xl"}>Issues Manager</Heading>
+        <Box>{children}</Box>
+      </Stack>
     </Box>
   );
 }

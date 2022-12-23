@@ -1,6 +1,5 @@
 import React from "react";
 import { Box, Container } from "@chakra-ui/react";
-import { css } from "@emotion/react";
 import Main from "components/Main";
 
 function Layout({ children }: { children: React.ReactNode }) {
