@@ -7,6 +7,12 @@ import Issues from "components/Issues/Issues";
 import { GET_LAST_ISSUES } from "apollo/issues";
 import get from "lodash/get";
 import size from "lodash/size";
+import {
+  GetLastIssues,
+  GetLastIssuesQuery,
+  GetLastIssuesQueryVariables,
+} from "../../generated/graphql";
+import { IssueConnection } from "@octokit/graphql-schema/schema";
 
 const initialItems = [
   {
@@ -25,8 +31,16 @@ type FormValues = {
 
 // TODO: set static size
 function IssuesForm() {
-  const [getIssues, { loading, data, error }] = useLazyQuery(GET_LAST_ISSUES);
-  const issues = get(data, "repositoryOwner.repository.issues.edges");
+  const [getIssues, { loading, data, error }] = useLazyQuery<
+    GetLastIssuesQuery,
+    GetLastIssuesQueryVariables
+  >(GetLastIssues);
+  const issues: IssueConnection = get(
+    data,
+    "repositoryOwner.repository.issues.edges"
+  );
+
+  // const issues: IssueConnection = data?.repositoryOwner?.repository?.issues;
 
   const { handleSubmit, control, setFocus } = useForm<FormValues>({
     defaultValues: {
@@ -40,8 +54,8 @@ function IssuesForm() {
     setFocus("repo");
   }, [setFocus]);
 
-  function formSubmitHandler(data: FormValues) {
-    const { repo } = data;
+  function formSubmitHandler(formData: FormValues) {
+    const { repo } = formData;
     const [repoOwner, repoName] = repo.split("/");
 
     getIssues({

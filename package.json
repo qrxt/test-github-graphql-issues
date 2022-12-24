@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "test": "jest",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "codegen": "NODE_OPTIONS=\"--loader ts-node/esm\" graphql-codegen-esm --verbose --config codegen.yml",
+    "codegen2": "NODE_OPTIONS=\"--loader ts-node/esm\" graphql-codegen-esm"
   },
   "lint-staged": {
     "*.(js|jsx|ts|tsx)": [
@@ -60,10 +62,19 @@
     "@emotion/babel-plugin": "^11.10.2",
     "@emotion/babel-preset-css-prop": "^11.10.0",
     "@emotion/eslint-plugin": "^11.10.0",
+    "@graphql-codegen/cli": "2.16.1",
+    "@graphql-codegen/client-preset": "^1.2.3",
+    "@graphql-codegen/typescript": "2.8.5",
+    "@graphql-codegen/typescript-document-nodes": "^2.3.10",
+    "@graphql-codegen/typescript-operations": "^2.5.10",
+    "@graphql-codegen/typescript-react-apollo": "^3.3.7",
+    "@graphql-codegen/typescript-resolvers": "2.7.10",
+    "@octokit/graphql-schema": "^12.41.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/express": "^4.17.14",
+    "@types/graphql": "^14.5.0",
     "@types/jest": "^28.1.1",
     "@types/lodash": "^4.14.185",
     "@types/node": "^18.11.3",
