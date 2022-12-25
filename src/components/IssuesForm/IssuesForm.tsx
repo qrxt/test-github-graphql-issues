@@ -8,9 +8,10 @@ import { GET_LAST_ISSUES } from "apollo/issues";
 import get from "lodash/get";
 import size from "lodash/size";
 import {
-  GetLastIssues,
+  GetLastIssuesDocument,
   GetLastIssuesQuery,
   GetLastIssuesQueryVariables,
+  IssueNodeFieldsFragment,
 } from "../../generated/graphql";
 import { IssueConnection } from "@octokit/graphql-schema/schema";
 
@@ -34,13 +35,11 @@ function IssuesForm() {
   const [getIssues, { loading, data, error }] = useLazyQuery<
     GetLastIssuesQuery,
     GetLastIssuesQueryVariables
-  >(GetLastIssues);
-  const issues: IssueConnection = get(
+  >(GetLastIssuesDocument);
+  const issues: IssueNodeFieldsFragment[] | undefined = get(
     data,
     "repositoryOwner.repository.issues.edges"
   );
-
-  // const issues: IssueConnection = data?.repositoryOwner?.repository?.issues;
 
   const { handleSubmit, control, setFocus } = useForm<FormValues>({
     defaultValues: {
@@ -101,7 +100,7 @@ function IssuesForm() {
         </form>
       </Box>
 
-      {size(issues) ? <Issues isLoading={loading} issues={issues} /> : null}
+      {<Issues isLoading={loading} issues={issues} />}
     </Stack>
   );
 }

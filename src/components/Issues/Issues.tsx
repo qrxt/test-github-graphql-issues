@@ -19,10 +19,11 @@ import truncate from "lodash/truncate";
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
 import { css } from "@emotion/react";
 import { size } from "lodash";
+import { IssueNodeFieldsFragment } from "../../generated/graphql";
 
 export interface IssuesProps {
   isLoading: boolean;
-  issues: any[]; // TODO! set actual type
+  issues?: IssueNodeFieldsFragment[];
 }
 
 const issueBodyStyles = css`
@@ -56,7 +57,7 @@ function ShadowGradient() {
 
 // TODO! add actual types
 // TODO: link to /issue
-function IssueItem({ issue }) {
+function IssueItem({ issue }: { issue: IssueNodeFieldsFragment }) {
   const title = get(issue, "node.title");
   const author = get(issue, "node.author");
   const body = get(issue, "node.body");
@@ -111,7 +112,7 @@ function IssueItem({ issue }) {
 // TODO: error placeholder
 function Issues(props: IssuesProps) {
   const { isLoading, issues } = props;
-  console.log(issues);
+  console.log(isLoading);
 
   if (!issues) {
     return <p>no data</p>;
