@@ -19,12 +19,11 @@ import truncate from "lodash/truncate";
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
 import { css } from "@emotion/react";
 import { size } from "lodash";
-import { IssueNodeFieldsFragment } from "../../generated/graphql";
-
-export interface IssuesProps {
-  isLoading: boolean;
-  issues?: IssueNodeFieldsFragment[];
-}
+import { IssuesList, IssuesListItem } from "types/issues";
+import { useGetLastIssuesQuery } from "../../generated/graphql";
+import ShadowGradient from "components/ShadowGradient";
+import { useSearchParams } from "react-router-dom";
+import Loading from "components/Loading";
 
 const issueBodyStyles = css`
   text-align: left;
@@ -33,40 +32,18 @@ const issueBodyStyles = css`
   }
 `;
 
-// TODO: move to module
-function ShadowGradient() {
-  const shadowGradientStyles = css`
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 50%;
-    width: 100%;
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(120, 120, 120, 0) 50%,
-      rgba(255, 255, 255, 1) 100%
-    );
-
-    /* outline: 1px solid red; */
-  `;
-
-  return <div css={shadowGradientStyles}></div>;
-}
-
 // TODO! add actual types
 // TODO: link to /issue
-function IssueItem({ issue }: { issue: IssueNodeFieldsFragment }) {
-  const title = get(issue, "node.title");
-  const author = get(issue, "node.author");
-  const body = get(issue, "node.body");
-  const link = get(issue, "node.url");
+function IssueItem({ issue }: { issue: IssuesListItem }) {
+  const title = issue?.node?.title || "";
+  const author = issue?.node?.author;
+  const body = issue?.node?.body || "";
+  const link = issue?.node?.url || "";
 
   const truncatedBody = truncate(body, { length: 300 });
 
   return (
-    <ListItem mb={3} w="100%">
+    <ListItem mb={6} w="100%">
       <Card alignItems="flex-start">
         <CardHeader py={3} textAlign="start">
           <Link href="#" color="blue.300">
@@ -77,7 +54,7 @@ function IssueItem({ issue }: { issue: IssueNodeFieldsFragment }) {
         <CardBody py={3} w="100%">
           <Box mb={6} position="relative">
             <ReactMarkdown
-              components={ChakraUIRenderer(body)}
+              components={ChakraUIRenderer()}
               skipHtml
               css={issueBodyStyles}
             >
@@ -94,11 +71,15 @@ function IssueItem({ issue }: { issue: IssueNodeFieldsFragment }) {
             <Link href={link} color="blue.300">
               Open on GitHub
             </Link>
-            <Flex alignItems="center">
-              <Link href={author.url}>
-                <Image src={author.avatarUrl} w="12" h="12" mr={3} />
+            <Flex
+              alignItems="center"
+              justifyContent="center"
+              flexDir={["column", "column", "row"]}
+            >
+              <Link href={author?.url}>
+                <Image src={author?.avatarUrl} w="12" h="12" mr={[0, 0, 3]} />
               </Link>
-              <Link href={author.url}>{author.login}</Link>
+              <Link href={author?.url}>{author?.login}</Link>
             </Flex>
           </Flex>
         </CardBody>
@@ -107,30 +88,51 @@ function IssueItem({ issue }: { issue: IssueNodeFieldsFragment }) {
   );
 }
 
-// TODO: no data placeholder
-// TODO: loading indicator
-// TODO: error placeholder
-function Issues(props: IssuesProps) {
-  const { isLoading, issues } = props;
-  console.log(isLoading);
+function Issues() {
+  const [searchParams] = useSearchParams();
+  const { repo, owner } = Object.fromEntries(searchParams);
+  const { loading, data } = useGetLastIssuesQuery({
+    variables: {
+      repositoryName: repo,
+      repositoryOwner: owner,
+    },
+  });
+
+  const issues: IssuesList = data?.repositoryOwner?.repository?.issues.edges;
+
+  if (loading) {
+    return (
+      <Box data-testid="Issues">
+        <Loading />
+      </Box>
+    );
+  }
 
   if (!issues) {
-    return <p>no data</p>;
+    return (
+      <Box data-testid="Issues">
+        <Text>Could not find such a repository</Text>
+      </Box>
+    );
+  }
+
+  if (!size(issues)) {
+    return (
+      <Box data-testid="Issues">
+        <Text>Issues list is empty</Text>
+      </Box>
+    );
   }
 
   return (
     <Box data-testid="Issues">
-      {isLoading ? (
-        <p>loading...</p>
-      ) : (
-        <List display="flex" flexWrap="wrap">
-          {issues.map((issue) => {
-            const title = get(issue, "node.title");
+      <List display="flex" flexWrap="wrap">
+        {issues.map((issue) => {
+          const title = get(issue, "node.title");
 
-            return <IssueItem key={title} issue={issue} />;
-          })}
-        </List>
-      )}
+          return <IssueItem key={title} issue={issue} />;
+        })}
+      </List>
     </Box>
   );
 }

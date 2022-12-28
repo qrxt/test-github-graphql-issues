@@ -3,17 +3,15 @@ import { Routes, Route } from "react-router-dom";
 import Page from "components/Page";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
-import { Center, Spinner } from "@chakra-ui/react";
+import Loading from "components/Loading";
 
-const IssuesPage = React.lazy(() => import("components/pages/IssuesPage"));
-
-function Loading() {
-  return (
-    <Center h="100%" py={6}>
-      <Spinner size="xl" color="purple.500" thickness="4px" />
-    </Center>
-  );
-}
+const IssuesSearchPage = React.lazy(
+  () => import("components/pages/IssuesSearchPage")
+);
+const IssuesListPage = React.lazy(
+  () => import("components/pages/IssuesListPage")
+);
+const IssuePage = React.lazy(() => import("components/pages/IssuePage"));
 
 function App() {
   const { t } = useTranslation();
@@ -28,7 +26,25 @@ function App() {
           path="/"
           element={
             <Suspense fallback={<Loading />}>
-              <IssuesPage />
+              <IssuesSearchPage />
+            </Suspense>
+          }
+        />
+
+        <Route
+          path="/issues"
+          element={
+            <Suspense fallback={<Loading />}>
+              <IssuesListPage />
+            </Suspense>
+          }
+        />
+
+        <Route
+          path="/issues/:issue"
+          element={
+            <Suspense fallback={<Loading />}>
+              <IssuePage />
             </Suspense>
           }
         />

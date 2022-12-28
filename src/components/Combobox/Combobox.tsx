@@ -137,7 +137,7 @@ function Combobox(props: ComboboxProps) {
       <Stack position="relative">
         <Flex alignItems="center">
           <Input
-            placeholder="facebook/react"
+            placeholder="owner/repoName"
             flex="0 0 auto"
             {...getInputProps({
               ...inputProps,

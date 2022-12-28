@@ -2,18 +2,8 @@ import React, { useEffect } from "react";
 import { Box, Button, Flex, Stack } from "@chakra-ui/react";
 import Combobox from "components/Combobox/Combobox";
 import { Controller, useForm, useFormState } from "react-hook-form";
-import { useLazyQuery } from "@apollo/client";
-import Issues from "components/Issues/Issues";
-import { GET_LAST_ISSUES } from "apollo/issues";
-import get from "lodash/get";
-import size from "lodash/size";
-import {
-  GetLastIssuesDocument,
-  GetLastIssuesQuery,
-  GetLastIssuesQueryVariables,
-  IssueNodeFieldsFragment,
-} from "../../generated/graphql";
-import { IssueConnection } from "@octokit/graphql-schema/schema";
+import { useNavigate } from "react-router";
+import { createSearchParams } from "react-router-dom";
 
 const initialItems = [
   {
@@ -30,17 +20,8 @@ type FormValues = {
   repo: string;
 };
 
-// TODO: set static size
 function IssuesForm() {
-  const [getIssues, { loading, data, error }] = useLazyQuery<
-    GetLastIssuesQuery,
-    GetLastIssuesQueryVariables
-  >(GetLastIssuesDocument);
-  const issues: IssueNodeFieldsFragment[] | undefined = get(
-    data,
-    "repositoryOwner.repository.issues.edges"
-  );
-
+  const navigate = useNavigate();
   const { handleSubmit, control, setFocus } = useForm<FormValues>({
     defaultValues: {
       repo: "",
@@ -57,12 +38,17 @@ function IssuesForm() {
     const { repo } = formData;
     const [repoOwner, repoName] = repo.split("/");
 
-    getIssues({
-      variables: { repositoryOwner: repoOwner, repositoryName: repoName },
+    navigate({
+      pathname: "/issues",
+      search: `${createSearchParams({
+        owner: repoOwner,
+        repo: repoName,
+      })}`,
     });
   }
 
   const submitHandler = handleSubmit(formSubmitHandler);
+
   return (
     <Stack>
       <Box mb={6}>
@@ -99,8 +85,6 @@ function IssuesForm() {
           </Flex>
         </form>
       </Box>
-
-      {<Issues isLoading={loading} issues={issues} />}
     </Stack>
   );
 }
