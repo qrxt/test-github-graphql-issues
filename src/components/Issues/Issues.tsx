@@ -22,7 +22,11 @@ import { size } from "lodash";
 import { IssuesList, IssuesListItem } from "types/issues";
 import { useGetLastIssuesQuery } from "../../generated/graphql";
 import ShadowGradient from "components/ShadowGradient";
-import { useSearchParams } from "react-router-dom";
+import {
+  useSearchParams,
+  Link as RouterLink,
+  generatePath,
+} from "react-router-dom";
 import Loading from "components/Loading";
 
 const issueBodyStyles = css`
@@ -32,9 +36,14 @@ const issueBodyStyles = css`
   }
 `;
 
-// TODO! add actual types
-// TODO: link to /issue
-function IssueItem({ issue }: { issue: IssuesListItem }) {
+interface IssueItemProps {
+  issue: IssuesListItem;
+  repo: string;
+  owner: string;
+}
+
+function IssueItem(props: IssueItemProps) {
+  const { issue, repo, owner } = props;
   const title = issue?.node?.title || "";
   const author = issue?.node?.author;
   const body = issue?.node?.body || "";
@@ -42,11 +51,21 @@ function IssueItem({ issue }: { issue: IssuesListItem }) {
 
   const truncatedBody = truncate(body, { length: 300 });
 
+  console.log(owner, repo, issue?.node?.number);
+
   return (
     <ListItem mb={6} w="100%">
       <Card alignItems="flex-start">
         <CardHeader py={3} textAlign="start">
-          <Link href="#" color="blue.300">
+          <Link
+            as={RouterLink}
+            to={generatePath("/issue/:owner/:repo/:issueNumber", {
+              owner,
+              repo,
+              issueNumber: String(issue?.node?.number) || "",
+            })}
+            color="blue.300"
+          >
             <Heading size="md">{capitalize(title)}</Heading>
           </Link>
         </CardHeader>
@@ -130,7 +149,9 @@ function Issues() {
         {issues.map((issue) => {
           const title = get(issue, "node.title");
 
-          return <IssueItem key={title} issue={issue} />;
+          return (
+            <IssueItem key={title} issue={issue} repo={repo} owner={owner} />
+          );
         })}
       </List>
     </Box>

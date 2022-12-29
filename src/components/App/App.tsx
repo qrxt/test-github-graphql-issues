@@ -39,9 +39,8 @@ function App() {
             </Suspense>
           }
         />
-
         <Route
-          path="/issues/:issue"
+          path="/issue/:owner/:repo/:issueNumber"
           element={
             <Suspense fallback={<Loading />}>
               <IssuePage />

@@ -3,6 +3,7 @@ import { gql } from "@apollo/client";
 export const ISSUE_NODE_FIELDS = gql`
   fragment IssueNodeFields on IssueEdge {
     node {
+      number
       title
       url
       body

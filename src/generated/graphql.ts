@@ -27316,7 +27316,18 @@ export enum WorkflowRunOrderField {
   CreatedAt = 'CREATED_AT'
 }
 
-export type IssueNodeFieldsFragment = { __typename?: 'IssueEdge', node?: { __typename?: 'Issue', title: string, url: any, body: string, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null };
+export type IssueCommentFieldsFragment = { __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string, body: string, createdAt: any, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null };
+
+export type GetIssueQueryVariables = Exact<{
+  repositoryOwner: Scalars['String'];
+  repositoryName: Scalars['String'];
+  number: Scalars['Int'];
+}>;
+
+
+export type GetIssueQuery = { __typename?: 'Query', repositoryOwner?: { __typename?: 'Organization', repository?: { __typename?: 'Repository', issue?: { __typename?: 'Issue', title: string, body: string, url: any, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null, comments: { __typename?: 'IssueCommentConnection', edges?: Array<{ __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string, body: string, createdAt: any, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null } | null> | null } } | null } | null } | { __typename?: 'User', repository?: { __typename?: 'Repository', issue?: { __typename?: 'Issue', title: string, body: string, url: any, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null, comments: { __typename?: 'IssueCommentConnection', edges?: Array<{ __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string, body: string, createdAt: any, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null } | null> | null } } | null } | null } | null };
+
+export type IssueNodeFieldsFragment = { __typename?: 'IssueEdge', node?: { __typename?: 'Issue', number: number, title: string, url: any, body: string, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null };
 
 export type GetLastIssuesQueryVariables = Exact<{
   repositoryOwner: Scalars['String'];
@@ -27324,11 +27335,26 @@ export type GetLastIssuesQueryVariables = Exact<{
 }>;
 
 
-export type GetLastIssuesQuery = { __typename?: 'Query', repositoryOwner?: { __typename?: 'Organization', repository?: { __typename?: 'Repository', issues: { __typename?: 'IssueConnection', edges?: Array<{ __typename?: 'IssueEdge', node?: { __typename?: 'Issue', title: string, url: any, body: string, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null } | null> | null } } | null } | { __typename?: 'User', repository?: { __typename?: 'Repository', issues: { __typename?: 'IssueConnection', edges?: Array<{ __typename?: 'IssueEdge', node?: { __typename?: 'Issue', title: string, url: any, body: string, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null } | null> | null } } | null } | null };
+export type GetLastIssuesQuery = { __typename?: 'Query', repositoryOwner?: { __typename?: 'Organization', repository?: { __typename?: 'Repository', issues: { __typename?: 'IssueConnection', edges?: Array<{ __typename?: 'IssueEdge', node?: { __typename?: 'Issue', number: number, title: string, url: any, body: string, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null } | null> | null } } | null } | { __typename?: 'User', repository?: { __typename?: 'Repository', issues: { __typename?: 'IssueConnection', edges?: Array<{ __typename?: 'IssueEdge', node?: { __typename?: 'Issue', number: number, title: string, url: any, body: string, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null } | null> | null } } | null } | null };
 
+export const IssueCommentFieldsFragmentDoc = gql`
+    fragment IssueCommentFields on IssueCommentEdge {
+  node {
+    id
+    body
+    createdAt
+    author {
+      login
+      avatarUrl
+      url
+    }
+  }
+}
+    `;
 export const IssueNodeFieldsFragmentDoc = gql`
     fragment IssueNodeFields on IssueEdge {
   node {
+    number
     title
     url
     body
@@ -27340,6 +27366,59 @@ export const IssueNodeFieldsFragmentDoc = gql`
   }
 }
     `;
+export const GetIssueDocument = gql`
+    query GetIssue($repositoryOwner: String!, $repositoryName: String!, $number: Int!) {
+  repositoryOwner(login: $repositoryOwner) {
+    repository(name: $repositoryName) {
+      issue(number: $number) {
+        title
+        body
+        url
+        author {
+          login
+          avatarUrl
+          url
+        }
+        comments(last: 3) {
+          edges {
+            ...IssueCommentFields
+          }
+        }
+      }
+    }
+  }
+}
+    ${IssueCommentFieldsFragmentDoc}`;
+
+/**
+ * __useGetIssueQuery__
+ *
+ * To run a query within a React component, call `useGetIssueQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetIssueQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetIssueQuery({
+ *   variables: {
+ *      repositoryOwner: // value for 'repositoryOwner'
+ *      repositoryName: // value for 'repositoryName'
+ *      number: // value for 'number'
+ *   },
+ * });
+ */
+export function useGetIssueQuery(baseOptions: Apollo.QueryHookOptions<GetIssueQuery, GetIssueQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetIssueQuery, GetIssueQueryVariables>(GetIssueDocument, options);
+      }
+export function useGetIssueLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetIssueQuery, GetIssueQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetIssueQuery, GetIssueQueryVariables>(GetIssueDocument, options);
+        }
+export type GetIssueQueryHookResult = ReturnType<typeof useGetIssueQuery>;
+export type GetIssueLazyQueryHookResult = ReturnType<typeof useGetIssueLazyQuery>;
+export type GetIssueQueryResult = Apollo.QueryResult<GetIssueQuery, GetIssueQueryVariables>;
 export const GetLastIssuesDocument = gql`
     query GetLastIssues($repositoryOwner: String!, $repositoryName: String!) {
   repositoryOwner(login: $repositoryOwner) {

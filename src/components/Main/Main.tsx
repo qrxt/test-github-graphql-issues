@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Container, Heading, Stack } from "@chakra-ui/react";
 import { css } from "@emotion/react";
 
+// TODO: heading
 function Main({ children }: { children: React.ReactNode }) {
   const mainStyles = css`
     grid-area: main;
@@ -17,7 +18,7 @@ function Main({ children }: { children: React.ReactNode }) {
         textAlign={"center"}
         px={0}
       >
-        <Heading fontSize={"2xl"}>Issues Manager</Heading>
+        {/* <Heading fontSize={"2xl"}>Issues Manager</Heading> */}
         <Box>{children}</Box>
       </Stack>
     </Box>
