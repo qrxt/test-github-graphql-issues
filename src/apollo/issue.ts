@@ -30,17 +30,32 @@ export const GET_ISSUE = gql`
           title
           body
           url
+          id
           author {
             login
             avatarUrl
             url
           }
-          comments(first: 3) {
+          comments(first: 50) {
             edges {
               ...IssueCommentFields
             }
           }
         }
+      }
+    }
+  }
+`;
+
+// Comments
+
+export const ADD_COMMENT = gql`
+  ${ISSUE_COMMENT_NODE}
+  mutation AddComment($issueId: ID!, $commentBody: String!) {
+    addComment(input: { subjectId: $issueId, body: $commentBody }) {
+      clientMutationId
+      commentEdge {
+        ...IssueCommentFields
       }
     }
   }

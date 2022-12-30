@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Text,
   Box,
@@ -8,49 +9,25 @@ import {
   Link,
   Stack,
   Image,
-  theme,
+  Button,
 } from "@chakra-ui/react";
-import { css } from "@emotion/react";
-import ChakraUIRenderer from "chakra-ui-markdown-renderer";
 import Loading from "components/Loading";
 import capitalize from "lodash/capitalize";
 import size from "lodash/size";
-import React from "react";
-import ReactMarkdown from "react-markdown";
 import { useParams } from "react-router";
-import { useGetIssueQuery } from "../../generated/graphql";
+import {
+  AddCommentMutationFn,
+  useAddCommentMutation,
+  useGetIssueQuery,
+} from "../../generated/graphql";
 import {
   Issue as IssueType,
   IssueCommentNode,
   IssueCommentsList,
   Author as AuthorType,
 } from "../../types/issues";
-
-const issueBodyStyles = css`
-  text-align: left;
-  .chakra-heading {
-    font-size: 1.1rem;
-  }
-
-  .chakra-text > img {
-    margin: 10px auto;
-  }
-
-  .chakra-code {
-    overflow-wrap: initial;
-    overflow-x: auto;
-
-    vertical-align: bottom;
-    padding: 0 2px;
-
-    word-break: break-word;
-    margin-bottom: 5px;
-  }
-
-  .chakra-link {
-    color: ${theme.colors.blue[300]};
-  }
-`;
+import MDEditor from "@uiw/react-md-editor";
+import { Controller, useForm, useFormState } from "react-hook-form";
 
 interface CommentProps {
   comment: IssueCommentNode;
@@ -60,7 +37,7 @@ function Author({ author }: { author: AuthorType }) {
   return (
     <Link href={author?.url} color="blue.300" fontWeight="medium">
       <Flex alignItems="center">
-        <Image src={author?.avatarUrl} w="12" h="12" mr={[0, 0, 3]} />
+        <Image src={author?.avatarUrl} w="12" h="12" mr={[1, 1, 3]} />
         <Text>{author?.login}</Text>
       </Flex>
     </Link>
@@ -73,20 +50,81 @@ function Comment(props: CommentProps) {
   const author: AuthorType = comment?.author;
 
   return (
-    <Card p={6} shadow="lg">
+    <Card p={6} shadow="lg" border="1px" borderColor="blackAlpha.100">
       <CardHeader p="0" mb="6">
         <Author author={author} />
       </CardHeader>
       <Box mb={6} position="relative">
-        <ReactMarkdown
-          components={ChakraUIRenderer()}
-          skipHtml
-          css={issueBodyStyles}
-        >
-          {comment?.body || ""}
-        </ReactMarkdown>
+        <MDEditor.Markdown
+          source={comment?.body || ""}
+          style={{ textAlign: "left" }}
+        />
       </Box>
     </Card>
+  );
+}
+
+type FormValues = {
+  text: string;
+};
+
+function formSubmitHandler(issueId: string, addComment: AddCommentMutationFn) {
+  return (formData: FormValues) => {
+    addComment({
+      variables: {
+        issueId,
+        commentBody: formData.text,
+      },
+    });
+  };
+}
+
+function NewCommentForm({ issueId }: { issueId: string }) {
+  const { control, handleSubmit, getValues } = useForm<FormValues>();
+  const { isDirty } = useFormState<FormValues>({
+    control,
+  });
+  const [addComment, { loading }] = useAddCommentMutation({
+    refetchQueries: ["GetIssue"],
+  });
+  const submitHandler = handleSubmit(formSubmitHandler(issueId, addComment));
+  const values = getValues();
+
+  const isSubmitDisabled = !isDirty || !values.text || loading;
+
+  return (
+    <form onSubmit={submitHandler}>
+      <Stack>
+        <Box mb="3">
+          <Controller
+            rules={{ required: true }}
+            name="text"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <MDEditor
+                textareaProps={{
+                  disabled: loading,
+                }}
+                value={value}
+                onChange={(something) => {
+                  onChange(something);
+                }}
+              />
+            )}
+          />
+        </Box>
+        <Flex justifyContent="space-between">
+          <Box>{loading && <Loading size="md" />}</Box>
+          <Button
+            type="submit"
+            disabled={isSubmitDisabled}
+            alignSelf="flex-end"
+          >
+            Add comment
+          </Button>
+        </Flex>
+      </Stack>
+    </form>
   );
 }
 
@@ -94,10 +132,10 @@ function Comment(props: CommentProps) {
 // TODO: comment form
 function Issue() {
   const { owner = "", repo = "", issueNumber = "" } = useParams();
-  const { loading, data } = useGetIssueQuery({
+  const { loading, data, error } = useGetIssueQuery({
     variables: {
-      repositoryName: owner,
-      repositoryOwner: repo,
+      repositoryName: repo,
+      repositoryOwner: owner,
       number: Number(issueNumber),
     },
   });
@@ -110,6 +148,8 @@ function Issue() {
     return <Loading />;
   }
 
+  console.log(error);
+
   return (
     <Box as="section">
       <Box mb="6">
@@ -121,17 +161,14 @@ function Issue() {
       </Heading>
 
       <Box mb={12} position="relative">
-        <ReactMarkdown
-          components={ChakraUIRenderer({})}
-          skipHtml
-          css={issueBodyStyles}
-        >
-          {issue?.body || ""}
-        </ReactMarkdown>
+        <MDEditor.Markdown
+          source={issue?.body || ""}
+          style={{ textAlign: "left" }}
+        />
       </Box>
 
       {size(comments) ? (
-        <Box>
+        <Box mb={6}>
           <Heading size="lg" textAlign="left" mb={3}>
             Comments
           </Heading>
@@ -144,6 +181,10 @@ function Issue() {
           </Stack>
         </Box>
       ) : null}
+
+      <Card p={6} shadow="lg" border="1px" borderColor="blackAlpha.100">
+        <NewCommentForm issueId={issue?.id || ""} />
+      </Card>
     </Box>
   );
 }

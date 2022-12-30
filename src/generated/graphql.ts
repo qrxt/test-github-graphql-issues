@@ -27325,7 +27325,15 @@ export type GetIssueQueryVariables = Exact<{
 }>;
 
 
-export type GetIssueQuery = { __typename?: 'Query', repositoryOwner?: { __typename?: 'Organization', repository?: { __typename?: 'Repository', issue?: { __typename?: 'Issue', title: string, body: string, url: any, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null, comments: { __typename?: 'IssueCommentConnection', edges?: Array<{ __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string, body: string, createdAt: any, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null } | null> | null } } | null } | null } | { __typename?: 'User', repository?: { __typename?: 'Repository', issue?: { __typename?: 'Issue', title: string, body: string, url: any, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null, comments: { __typename?: 'IssueCommentConnection', edges?: Array<{ __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string, body: string, createdAt: any, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null } | null> | null } } | null } | null } | null };
+export type GetIssueQuery = { __typename?: 'Query', repositoryOwner?: { __typename?: 'Organization', repository?: { __typename?: 'Repository', issue?: { __typename?: 'Issue', title: string, body: string, url: any, id: string, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null, comments: { __typename?: 'IssueCommentConnection', edges?: Array<{ __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string, body: string, createdAt: any, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null } | null> | null } } | null } | null } | { __typename?: 'User', repository?: { __typename?: 'Repository', issue?: { __typename?: 'Issue', title: string, body: string, url: any, id: string, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null, comments: { __typename?: 'IssueCommentConnection', edges?: Array<{ __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string, body: string, createdAt: any, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null } | null> | null } } | null } | null } | null };
+
+export type AddCommentMutationVariables = Exact<{
+  issueId: Scalars['ID'];
+  commentBody: Scalars['String'];
+}>;
+
+
+export type AddCommentMutation = { __typename?: 'Mutation', addComment?: { __typename?: 'AddCommentPayload', clientMutationId?: string | null, commentEdge?: { __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string, body: string, createdAt: any, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null } | null } | null };
 
 export type IssueNodeFieldsFragment = { __typename?: 'IssueEdge', node?: { __typename?: 'Issue', number: number, title: string, url: any, body: string, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null };
 
@@ -27374,12 +27382,13 @@ export const GetIssueDocument = gql`
         title
         body
         url
+        id
         author {
           login
           avatarUrl
           url
         }
-        comments(first: 3) {
+        comments(first: 50) {
           edges {
             ...IssueCommentFields
           }
@@ -27419,6 +27428,43 @@ export function useGetIssueLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetIssueQueryHookResult = ReturnType<typeof useGetIssueQuery>;
 export type GetIssueLazyQueryHookResult = ReturnType<typeof useGetIssueLazyQuery>;
 export type GetIssueQueryResult = Apollo.QueryResult<GetIssueQuery, GetIssueQueryVariables>;
+export const AddCommentDocument = gql`
+    mutation AddComment($issueId: ID!, $commentBody: String!) {
+  addComment(input: {subjectId: $issueId, body: $commentBody}) {
+    clientMutationId
+    commentEdge {
+      ...IssueCommentFields
+    }
+  }
+}
+    ${IssueCommentFieldsFragmentDoc}`;
+export type AddCommentMutationFn = Apollo.MutationFunction<AddCommentMutation, AddCommentMutationVariables>;
+
+/**
+ * __useAddCommentMutation__
+ *
+ * To run a mutation, you first call `useAddCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addCommentMutation, { data, loading, error }] = useAddCommentMutation({
+ *   variables: {
+ *      issueId: // value for 'issueId'
+ *      commentBody: // value for 'commentBody'
+ *   },
+ * });
+ */
+export function useAddCommentMutation(baseOptions?: Apollo.MutationHookOptions<AddCommentMutation, AddCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddCommentMutation, AddCommentMutationVariables>(AddCommentDocument, options);
+      }
+export type AddCommentMutationHookResult = ReturnType<typeof useAddCommentMutation>;
+export type AddCommentMutationResult = Apollo.MutationResult<AddCommentMutation>;
+export type AddCommentMutationOptions = Apollo.BaseMutationOptions<AddCommentMutation, AddCommentMutationVariables>;
 export const GetLastIssuesDocument = gql`
     query GetLastIssues($repositoryOwner: String!, $repositoryName: String!) {
   repositoryOwner(login: $repositoryOwner) {

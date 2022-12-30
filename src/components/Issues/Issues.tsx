@@ -28,6 +28,7 @@ import {
   generatePath,
 } from "react-router-dom";
 import Loading from "components/Loading";
+import MDEditor from "@uiw/react-md-editor";
 
 const issueBodyStyles = css`
   text-align: left;
@@ -72,13 +73,10 @@ function IssueItem(props: IssueItemProps) {
 
         <CardBody py={3} w="100%">
           <Box mb={6} position="relative">
-            <ReactMarkdown
-              components={ChakraUIRenderer()}
-              skipHtml
-              css={issueBodyStyles}
-            >
-              {truncatedBody}
-            </ReactMarkdown>
+            <MDEditor.Markdown
+              source={truncatedBody}
+              style={{ textAlign: "left" }}
+            />
             {size(body) > size(truncatedBody) ? <ShadowGradient /> : null}
           </Box>
           <Flex
