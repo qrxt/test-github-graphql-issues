@@ -35,7 +35,7 @@ export const GET_ISSUE = gql`
             avatarUrl
             url
           }
-          comments(last: 3) {
+          comments(first: 3) {
             edges {
               ...IssueCommentFields
             }
