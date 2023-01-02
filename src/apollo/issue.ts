@@ -23,6 +23,7 @@ export const GET_ISSUE = gql`
     $repositoryOwner: String!
     $repositoryName: String!
     $number: Int!
+    $after: String
   ) {
     repositoryOwner(login: $repositoryOwner) {
       repository(name: $repositoryName) {
@@ -36,8 +37,9 @@ export const GET_ISSUE = gql`
             avatarUrl
             url
           }
-          comments(first: 50) {
+          comments(first: 1, after: $after) {
             edges {
+              cursor
               ...IssueCommentFields
             }
           }

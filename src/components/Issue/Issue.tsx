@@ -1,9 +1,10 @@
 import React from "react";
-import { Box, Card, Heading, Stack } from "@chakra-ui/react";
+import { Box, Button, Card, Heading, Stack } from "@chakra-ui/react";
 import Loading from "components/Loading";
 import { Comment, NewCommentForm } from "components/Comment";
 import capitalize from "lodash/capitalize";
 import size from "lodash/size";
+import last from "lodash/last";
 import { useParams } from "react-router";
 import { useGetIssueQuery } from "../../generated/graphql";
 import {
@@ -18,7 +19,7 @@ import Author from "components/Author";
 // TODO: comment form
 function Issue() {
   const { owner = "", repo = "", issueNumber = "" } = useParams();
-  const { loading, data, error } = useGetIssueQuery({
+  const { loading, data, error, fetchMore } = useGetIssueQuery({
     variables: {
       repositoryName: repo,
       repositoryOwner: owner,
@@ -29,12 +30,11 @@ function Issue() {
   const issue: IssueType = data?.repositoryOwner?.repository?.issue;
   const comments: IssueCommentsList = issue?.comments.edges || [];
   const author: AuthorType = issue?.author;
+  const cursor = last(comments)?.cursor;
 
   if (loading) {
     return <Loading />;
   }
-
-  console.log(error);
 
   return (
     <Box as="section">
@@ -67,6 +67,27 @@ function Issue() {
           </Stack>
         </Box>
       ) : null}
+      <Button
+        onClick={() => {
+          fetchMore({
+            variables: {
+              after: cursor,
+            },
+            updateQuery: (prev, { fetchMoreResult }) => {
+              const cursor = last(
+                fetchMoreResult.repositoryOwner?.repository?.issue?.comments
+                  .edges
+              )?.cursor;
+
+              console.log("&&", prev, fetchMoreResult);
+
+              return prev;
+            },
+          });
+        }}
+      >
+        Load more
+      </Button>
 
       <Card p={6} shadow="lg" border="1px" borderColor="blackAlpha.100">
         <NewCommentForm issueId={issue?.id || ""} />

@@ -27322,10 +27322,11 @@ export type GetIssueQueryVariables = Exact<{
   repositoryOwner: Scalars['String'];
   repositoryName: Scalars['String'];
   number: Scalars['Int'];
+  after?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type GetIssueQuery = { __typename?: 'Query', repositoryOwner?: { __typename?: 'Organization', repository?: { __typename?: 'Repository', issue?: { __typename?: 'Issue', title: string, body: string, url: any, id: string, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null, comments: { __typename?: 'IssueCommentConnection', edges?: Array<{ __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string, body: string, createdAt: any, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null } | null> | null } } | null } | null } | { __typename?: 'User', repository?: { __typename?: 'Repository', issue?: { __typename?: 'Issue', title: string, body: string, url: any, id: string, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null, comments: { __typename?: 'IssueCommentConnection', edges?: Array<{ __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string, body: string, createdAt: any, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null } | null> | null } } | null } | null } | null };
+export type GetIssueQuery = { __typename?: 'Query', repositoryOwner?: { __typename?: 'Organization', repository?: { __typename?: 'Repository', issue?: { __typename?: 'Issue', title: string, body: string, url: any, id: string, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null, comments: { __typename?: 'IssueCommentConnection', edges?: Array<{ __typename?: 'IssueCommentEdge', cursor: string, node?: { __typename?: 'IssueComment', id: string, body: string, createdAt: any, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null } | null> | null } } | null } | null } | { __typename?: 'User', repository?: { __typename?: 'Repository', issue?: { __typename?: 'Issue', title: string, body: string, url: any, id: string, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null, comments: { __typename?: 'IssueCommentConnection', edges?: Array<{ __typename?: 'IssueCommentEdge', cursor: string, node?: { __typename?: 'IssueComment', id: string, body: string, createdAt: any, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null } | null> | null } } | null } | null } | null };
 
 export type AddCommentMutationVariables = Exact<{
   issueId: Scalars['ID'];
@@ -27375,7 +27376,7 @@ export const IssueNodeFieldsFragmentDoc = gql`
 }
     `;
 export const GetIssueDocument = gql`
-    query GetIssue($repositoryOwner: String!, $repositoryName: String!, $number: Int!) {
+    query GetIssue($repositoryOwner: String!, $repositoryName: String!, $number: Int!, $after: String) {
   repositoryOwner(login: $repositoryOwner) {
     repository(name: $repositoryName) {
       issue(number: $number) {
@@ -27388,8 +27389,9 @@ export const GetIssueDocument = gql`
           avatarUrl
           url
         }
-        comments(first: 50) {
+        comments(first: 1, after: $after) {
           edges {
+            cursor
             ...IssueCommentFields
           }
         }
@@ -27414,6 +27416,7 @@ export const GetIssueDocument = gql`
  *      repositoryOwner: // value for 'repositoryOwner'
  *      repositoryName: // value for 'repositoryName'
  *      number: // value for 'number'
+ *      after: // value for 'after'
  *   },
  * });
  */
