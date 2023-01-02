@@ -12,12 +12,9 @@ import {
   Link,
   Image,
 } from "@chakra-ui/react";
-import ReactMarkdown from "react-markdown";
 import get from "lodash/get";
 import capitalize from "lodash/capitalize";
 import truncate from "lodash/truncate";
-import ChakraUIRenderer from "chakra-ui-markdown-renderer";
-import { css } from "@emotion/react";
 import { size } from "lodash";
 import { IssuesList, IssuesListItem } from "types/issues";
 import { useGetLastIssuesQuery } from "../../generated/graphql";
@@ -29,13 +26,6 @@ import {
 } from "react-router-dom";
 import Loading from "components/Loading";
 import MDEditor from "@uiw/react-md-editor";
-
-const issueBodyStyles = css`
-  text-align: left;
-  .chakra-heading {
-    font-size: 1.1rem;
-  }
-`;
 
 interface IssueItemProps {
   issue: IssuesListItem;
