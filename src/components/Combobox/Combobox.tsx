@@ -179,5 +179,3 @@ function Combobox(props: ComboboxProps) {
 }
 
 export default Combobox;
-
-// TODO: Implement __tests__/locators/combobox

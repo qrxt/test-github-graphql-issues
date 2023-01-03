@@ -14,12 +14,11 @@ import {
 } from "../../types/issues";
 import MDEditor from "@uiw/react-md-editor";
 import Author from "components/Author";
+import mergeWith from "lodash/mergeWith";
 
-// TODO: author name, avatar, link to github
-// TODO: comment form
 function Issue() {
   const { owner = "", repo = "", issueNumber = "" } = useParams();
-  const { loading, data, error, fetchMore } = useGetIssueQuery({
+  const { loading, data, fetchMore } = useGetIssueQuery({
     variables: {
       repositoryName: repo,
       repositoryOwner: owner,
@@ -31,6 +30,8 @@ function Issue() {
   const comments: IssueCommentsList = issue?.comments.edges || [];
   const author: AuthorType = issue?.author;
   const cursor = last(comments)?.cursor;
+  const totalCount = issue?.comments.totalCount || 0;
+  const hasMore = size(comments) < totalCount;
 
   if (loading) {
     return <Loading />;
@@ -67,27 +68,28 @@ function Issue() {
           </Stack>
         </Box>
       ) : null}
-      <Button
-        onClick={() => {
-          fetchMore({
-            variables: {
-              after: cursor,
-            },
-            updateQuery: (prev, { fetchMoreResult }) => {
-              const cursor = last(
-                fetchMoreResult.repositoryOwner?.repository?.issue?.comments
-                  .edges
-              )?.cursor;
 
-              console.log("&&", prev, fetchMoreResult);
-
-              return prev;
-            },
-          });
-        }}
-      >
-        Load more
-      </Button>
+      {hasMore && (
+        <Button
+          mb={3}
+          onClick={() => {
+            fetchMore({
+              variables: {
+                after: cursor,
+              },
+              updateQuery: (prev, { fetchMoreResult }) => {
+                return mergeWith({}, prev, fetchMoreResult, function (a, b) {
+                  if (a instanceof Array) {
+                    return a.concat(b);
+                  }
+                });
+              },
+            });
+          }}
+        >
+          Load more
+        </Button>
+      )}
 
       <Card p={6} shadow="lg" border="1px" borderColor="blackAlpha.100">
         <NewCommentForm issueId={issue?.id || ""} />

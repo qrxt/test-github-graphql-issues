@@ -8,7 +8,6 @@ interface CommentProps {
   comment: IssueCommentNode;
 }
 
-// TODO: author name, avatar, link to github
 function Comment(props: CommentProps) {
   const { comment } = props;
   const author: AuthorType = comment?.author;

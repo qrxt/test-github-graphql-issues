@@ -15,8 +15,6 @@ export const ISSUE_COMMENT_NODE = gql`
   }
 `;
 
-// TODO: last N
-// TODO: author fragment
 export const GET_ISSUE = gql`
   ${ISSUE_COMMENT_NODE}
   query GetIssue(
@@ -37,7 +35,8 @@ export const GET_ISSUE = gql`
             avatarUrl
             url
           }
-          comments(first: 1, after: $after) {
+          comments(first: 10, after: $after) {
+            totalCount
             edges {
               cursor
               ...IssueCommentFields
