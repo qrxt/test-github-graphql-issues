@@ -19,6 +19,7 @@ import mergeWith from "lodash/mergeWith";
 function Issue() {
   const { owner = "", repo = "", issueNumber = "" } = useParams();
   const { loading, data, fetchMore } = useGetIssueQuery({
+    notifyOnNetworkStatusChange: true,
     variables: {
       repositoryName: repo,
       repositoryOwner: owner,
@@ -33,7 +34,7 @@ function Issue() {
   const totalCount = issue?.comments.totalCount || 0;
   const hasMore = size(comments) < totalCount;
 
-  if (loading) {
+  if (loading && !size(comments)) {
     return <Loading />;
   }
 
@@ -69,9 +70,15 @@ function Issue() {
         </Box>
       ) : null}
 
+      {loading && (
+        <Box mb="3">
+          <Loading size="md" />
+        </Box>
+      )}
+
       {hasMore && (
         <Button
-          mb={3}
+          mb="3"
           onClick={() => {
             fetchMore({
               variables: {

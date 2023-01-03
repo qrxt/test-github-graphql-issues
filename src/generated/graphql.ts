@@ -27336,15 +27336,16 @@ export type AddCommentMutationVariables = Exact<{
 
 export type AddCommentMutation = { __typename?: 'Mutation', addComment?: { __typename?: 'AddCommentPayload', clientMutationId?: string | null, commentEdge?: { __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string, body: string, createdAt: any, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null } | null } | null };
 
-export type IssueNodeFieldsFragment = { __typename?: 'IssueEdge', node?: { __typename?: 'Issue', number: number, title: string, url: any, body: string, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null };
+export type IssueNodeFieldsFragment = { __typename?: 'IssueEdge', node?: { __typename?: 'Issue', id: string, number: number, title: string, url: any, body: string, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null };
 
 export type GetLastIssuesQueryVariables = Exact<{
   repositoryOwner: Scalars['String'];
   repositoryName: Scalars['String'];
+  before?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type GetLastIssuesQuery = { __typename?: 'Query', repositoryOwner?: { __typename?: 'Organization', repository?: { __typename?: 'Repository', issues: { __typename?: 'IssueConnection', edges?: Array<{ __typename?: 'IssueEdge', node?: { __typename?: 'Issue', number: number, title: string, url: any, body: string, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null } | null> | null } } | null } | { __typename?: 'User', repository?: { __typename?: 'Repository', issues: { __typename?: 'IssueConnection', edges?: Array<{ __typename?: 'IssueEdge', node?: { __typename?: 'Issue', number: number, title: string, url: any, body: string, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null } | null> | null } } | null } | null };
+export type GetLastIssuesQuery = { __typename?: 'Query', repositoryOwner?: { __typename?: 'Organization', repository?: { __typename?: 'Repository', issues: { __typename?: 'IssueConnection', totalCount: number, edges?: Array<{ __typename?: 'IssueEdge', cursor: string, node?: { __typename?: 'Issue', id: string, number: number, title: string, url: any, body: string, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null } | null> | null } } | null } | { __typename?: 'User', repository?: { __typename?: 'Repository', issues: { __typename?: 'IssueConnection', totalCount: number, edges?: Array<{ __typename?: 'IssueEdge', cursor: string, node?: { __typename?: 'Issue', id: string, number: number, title: string, url: any, body: string, author?: { __typename?: 'Bot', login: string, avatarUrl: any, url: any } | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: any, url: any } | { __typename?: 'Mannequin', login: string, avatarUrl: any, url: any } | { __typename?: 'Organization', login: string, avatarUrl: any, url: any } | { __typename?: 'User', login: string, avatarUrl: any, url: any } | null } | null } | null> | null } } | null } | null };
 
 export const IssueCommentFieldsFragmentDoc = gql`
     fragment IssueCommentFields on IssueCommentEdge {
@@ -27363,6 +27364,7 @@ export const IssueCommentFieldsFragmentDoc = gql`
 export const IssueNodeFieldsFragmentDoc = gql`
     fragment IssueNodeFields on IssueEdge {
   node {
+    id
     number
     title
     url
@@ -27470,11 +27472,13 @@ export type AddCommentMutationHookResult = ReturnType<typeof useAddCommentMutati
 export type AddCommentMutationResult = Apollo.MutationResult<AddCommentMutation>;
 export type AddCommentMutationOptions = Apollo.BaseMutationOptions<AddCommentMutation, AddCommentMutationVariables>;
 export const GetLastIssuesDocument = gql`
-    query GetLastIssues($repositoryOwner: String!, $repositoryName: String!) {
+    query GetLastIssues($repositoryOwner: String!, $repositoryName: String!, $before: String) {
   repositoryOwner(login: $repositoryOwner) {
     repository(name: $repositoryName) {
-      issues(last: 5) {
+      issues(last: 10, before: $before) {
+        totalCount
         edges {
+          cursor
           ...IssueNodeFields
         }
       }
@@ -27497,6 +27501,7 @@ export const GetLastIssuesDocument = gql`
  *   variables: {
  *      repositoryOwner: // value for 'repositoryOwner'
  *      repositoryName: // value for 'repositoryName'
+ *      before: // value for 'before'
  *   },
  * });
  */

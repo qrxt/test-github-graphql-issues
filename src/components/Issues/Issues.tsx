@@ -11,11 +11,8 @@ import {
   Flex,
   Link,
   Image,
+  Button,
 } from "@chakra-ui/react";
-import get from "lodash/get";
-import capitalize from "lodash/capitalize";
-import truncate from "lodash/truncate";
-import { size } from "lodash";
 import { IssuesList, IssuesListItem } from "types/issues";
 import { useGetLastIssuesQuery } from "../../generated/graphql";
 import ShadowGradient from "components/ShadowGradient";
@@ -26,6 +23,11 @@ import {
 } from "react-router-dom";
 import Loading from "components/Loading";
 import MDEditor from "@uiw/react-md-editor";
+import mergeWith from "lodash/mergeWith";
+import capitalize from "lodash/capitalize";
+import truncate from "lodash/truncate";
+import size from "lodash/size";
+import first from "lodash/first";
 
 interface IssueItemProps {
   issue: IssuesListItem;
@@ -41,8 +43,6 @@ function IssueItem(props: IssueItemProps) {
   const link = issue?.node?.url || "";
 
   const truncatedBody = truncate(body, { length: 300 });
-
-  console.log(owner, repo, issue?.node?.number);
 
   return (
     <ListItem mb={6} w="100%">
@@ -98,16 +98,23 @@ function IssueItem(props: IssueItemProps) {
 function Issues() {
   const [searchParams] = useSearchParams();
   const { repo, owner } = Object.fromEntries(searchParams);
-  const { loading, data } = useGetLastIssuesQuery({
+  const { loading, data, fetchMore } = useGetLastIssuesQuery({
+    notifyOnNetworkStatusChange: true,
     variables: {
       repositoryName: repo,
       repositoryOwner: owner,
     },
   });
 
-  const issues: IssuesList = data?.repositoryOwner?.repository?.issues.edges;
+  const issues: IssuesList =
+    data?.repositoryOwner?.repository?.issues.edges || [];
+  console.log(issues);
+  const cursor = first(issues)?.cursor;
+  console.log(cursor);
+  const totalCount = data?.repositoryOwner?.repository?.issues.totalCount || 0;
+  const hasMore = size(issues) < totalCount;
 
-  if (loading) {
+  if (loading && !size(issues)) {
     return (
       <Box data-testid="Issues">
         <Loading />
@@ -135,13 +142,44 @@ function Issues() {
     <Box data-testid="Issues">
       <List display="flex" flexWrap="wrap">
         {issues.map((issue) => {
-          const title = get(issue, "node.title");
-
           return (
-            <IssueItem key={title} issue={issue} repo={repo} owner={owner} />
+            <IssueItem
+              key={issue?.node?.id}
+              issue={issue}
+              repo={repo}
+              owner={owner}
+            />
           );
         })}
       </List>
+
+      {loading && (
+        <Box mb="3">
+          <Loading size="md" />
+        </Box>
+      )}
+
+      {hasMore && (
+        <Button
+          mb="3"
+          onClick={() => {
+            fetchMore({
+              variables: {
+                before: cursor,
+              },
+              updateQuery: (prev, { fetchMoreResult }) => {
+                return mergeWith({}, prev, fetchMoreResult, function (a, b) {
+                  if (a instanceof Array) {
+                    return a.concat(b);
+                  }
+                });
+              },
+            });
+          }}
+        >
+          Load more
+        </Button>
+      )}
     </Box>
   );
 }
