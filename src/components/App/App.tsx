@@ -32,7 +32,7 @@ function App() {
         />
 
         <Route
-          path="/issues"
+          path="/issues/:owner/:repo"
           element={
             <Suspense fallback={<Loading />}>
               <IssuesListPage />

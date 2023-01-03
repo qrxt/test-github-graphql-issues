@@ -16,11 +16,7 @@ import {
 import { IssuesList, IssuesListItem } from "types/issues";
 import { useGetLastIssuesQuery } from "../../generated/graphql";
 import ShadowGradient from "components/ShadowGradient";
-import {
-  useSearchParams,
-  Link as RouterLink,
-  generatePath,
-} from "react-router-dom";
+import { Link as RouterLink, generatePath, useParams } from "react-router-dom";
 import Loading from "components/Loading";
 import MDEditor from "@uiw/react-md-editor";
 import mergeWith from "lodash/mergeWith";
@@ -28,6 +24,7 @@ import capitalize from "lodash/capitalize";
 import truncate from "lodash/truncate";
 import size from "lodash/size";
 import first from "lodash/first";
+import Breadcrumb from "components/Breadcrumb";
 
 interface IssueItemProps {
   issue: IssuesListItem;
@@ -96,21 +93,18 @@ function IssueItem(props: IssueItemProps) {
 }
 
 function Issues() {
-  const [searchParams] = useSearchParams();
-  const { repo, owner } = Object.fromEntries(searchParams);
+  const { owner = "", repo = "" } = useParams();
   const { loading, data, fetchMore } = useGetLastIssuesQuery({
     notifyOnNetworkStatusChange: true,
     variables: {
-      repositoryName: repo,
       repositoryOwner: owner,
+      repositoryName: repo,
     },
   });
 
   const issues: IssuesList =
     data?.repositoryOwner?.repository?.issues.edges || [];
-  console.log(issues);
   const cursor = first(issues)?.cursor;
-  console.log(cursor);
   const totalCount = data?.repositoryOwner?.repository?.issues.totalCount || 0;
   const hasMore = size(issues) < totalCount;
 
@@ -140,6 +134,10 @@ function Issues() {
 
   return (
     <Box data-testid="Issues">
+      <Box mb="6">
+        <Breadcrumb />
+      </Box>
+
       <List display="flex" flexWrap="wrap">
         {issues.map((issue) => {
           return (

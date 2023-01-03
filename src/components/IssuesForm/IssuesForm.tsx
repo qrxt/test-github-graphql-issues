@@ -39,11 +39,7 @@ function IssuesForm() {
     const [repoOwner, repoName] = repo.split("/");
 
     navigate({
-      pathname: "/issues",
-      search: `${createSearchParams({
-        owner: repoOwner,
-        repo: repoName,
-      })}`,
+      pathname: `/issues/${repoOwner}/${repoName}`,
     });
   }
 

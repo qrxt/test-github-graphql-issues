@@ -15,6 +15,7 @@ import {
 import MDEditor from "@uiw/react-md-editor";
 import Author from "components/Author";
 import mergeWith from "lodash/mergeWith";
+import Breadcrumb from "components/Breadcrumb";
 
 function Issue() {
   const { owner = "", repo = "", issueNumber = "" } = useParams();
@@ -40,6 +41,10 @@ function Issue() {
 
   return (
     <Box as="section">
+      <Box mb="6">
+        <Breadcrumb />
+      </Box>
+
       <Box mb="6">
         <Author author={author} />
       </Box>
